@@ -41,7 +41,7 @@ class ASTGeneration(MT22Visitor):
             exprlst.append(recur[pos])
             pos = pos - 1
         exprlst.reverse()
-        exprlst.append(ctx.expr().getText())
+        exprlst.append(self.visit(ctx.expr()))
         return list(map(lambda x,y: VarDecl(x,type_,y),varlst,exprlst))
         
         
@@ -49,9 +49,9 @@ class ASTGeneration(MT22Visitor):
         child = ctx.getChild(0)
         if(isinstance(child,MT22Parser.Atomic_typeContext)):
             return self.visit(child)
-        elif (isinstance(child,MT22Parser.AUTO)):
-            return AutoType()
-        return ['self.visitArray_type(child)']
+        elif(isinstance(child,MT22Parser.Array_typeContext)):
+            return self.visitArray_type(child)
+        return AutoType()
     
     def visitAtomic_type(self,ctx: MT22Parser.Atomic_typeContext):
         child = ctx.getChild(0)
@@ -66,9 +66,123 @@ class ASTGeneration(MT22Visitor):
     def visitRecur(self,ctx: MT22Parser.RecurContext):
         if(ctx.getChildCount()==3):
             return [self.visit(ctx.type_())]
-        return [ctx.ID()] + self.visitRecur(ctx.recur()) + [ctx.expr().getText()]
+        return [ctx.ID()] + self.visitRecur(ctx.recur()) + [self.visit(ctx.expr())]
         
         
     def visitExpr(self,ctx: MT22Parser.ExprContext):
-        return "expr"
-        
+        if (ctx.getChildCount()==1):
+            return self.visitExpr1(ctx.expr1(0))
+        left = self.visit(ctx.expr1(0))
+        right = self.visit(ctx.expr1(1))
+        op = ctx.getChild(1).getText()
+        return BinExpr(op,left,right)
+    
+    def visitExpr1(self,ctx: MT22Parser.Expr1Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr2(0))
+        left = self.visit(ctx.expr2(0))
+        right = self.visit(ctx.expr2(1))
+        op = ctx.getChild(1).getText()
+        return BinExpr(op,left,right)
+    
+    def visitExpr2(self,ctx: MT22Parser.Expr2Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr3())
+        left = self.visit(ctx.expr2())
+        right = self.visit(ctx.expr3())
+        op = ctx.getChild(1).getText()
+        return BinExpr(op,left,right)
+    
+    def visitExpr3(self,ctx: MT22Parser.Expr3Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr4())
+        left = self.visit(ctx.expr3())
+        right = self.visit(ctx.expr4())
+        op = ctx.getChild(1).getText()
+        return BinExpr(op,left,right)
+    
+    def visitExpr4(self,ctx: MT22Parser.Expr4Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr5())
+        left = self.visit(ctx.expr4())
+        right = self.visit(ctx.expr5())
+        op = ctx.getChild(1).getText()
+        return BinExpr(op,left,right)
+    
+    def visitExpr5(self,ctx:MT22Parser.Expr5Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr6())
+        op = ctx.getChild(0).getText()
+        val = self.visit(ctx.expr5())
+        return UnExpr(op,val)
+    
+    def visitExpr6(self,ctx:MT22Parser.Expr6Context):
+        if (ctx.getChildCount()==1):
+            return self.visit(ctx.expr7())
+        op = '-'
+        val = self.visit(ctx.expr6())
+        return UnExpr(op,val)
+    
+    def visitExpr7(self,ctx:MT22Parser.Expr7Context):
+        return self.visit(ctx.getChild(0))
+    
+    def visitExprval(self,ctx: MT22Parser.ExprvalContext):
+        if(ctx.getChildCount()==3):
+            return self.visit(ctx.expr())
+        child = ctx.getChild(0)
+        if(not(isinstance(child,MT22Parser.Call_stmtContext)) and not(isinstance(child,MT22Parser.Indexed_arrayContext))):
+           type_ =  child.getSymbol().type
+           if (type_ == MT22Parser.INT_TYPE):
+               return IntegerLit(child.getText())
+           if (type_ == MT22Parser.FLOAT_TYPE):
+               return FloatLit(child.getText())
+           if (type_ == MT22Parser.STRING_TYPE):
+               return StringLit(child.getText())
+           if (type_ == MT22Parser.ID):
+               return Id(child.getText())
+           return BooleanLit(child.getText())
+        return self.visit(child)
+    
+    def visitIndexop(self,ctx: MT22Parser.IndexopContext):
+        ID = ctx.ID().getText()
+        exprlist = self.visit(ctx.exprlist())
+        return ArrayCell(ID,exprlist)
+    
+    def visitExprlist(self,ctx: MT22Parser.ExprlistContext):
+        print(ctx.getText())
+        if(ctx.getChildCount()==1):
+            return [self.visit(ctx.expr())]
+        return [self.visit(ctx.expr())] + self.visit(ctx.exprlist())
+    
+    def visitCall_stmt(self,ctx: MT22Parser.ExprlistContext):
+        ID = ctx.ID().getText()
+        args = self.visit(ctx.argument())
+        return CallStmt(ID,args)
+
+    def visitArgument(self,ctx: MT22Parser.ArgumentContext):
+        if(ctx.getChildCount()==0):
+            return []
+        expr = self.visit(ctx.expr())
+        print(ctx.getChildCount())
+        if(ctx.getChildCount()==1):
+            return [expr]
+        return [expr] + self.visit(ctx.argument())
+    
+    def visitIndexed_array(self,ctx: MT22Parser.Indexed_arrayContext):
+        if(ctx.getChildCount()==3):
+            exprlist = self.visit(ctx.exprlist())
+            return ArrayLit(exprlist)
+        return ArrayLit([])
+
+    def visitArray_type(self,ctx: MT22Parser.Array_typeContext):
+        type_ = self.visit(ctx.atomic_type())
+        dimension = self.visit(ctx.dimension())
+        return ArrayType(dimension,type_)
+    
+    def visitDimension(self, ctx: MT22Parser.DimensionContext):
+        return self.visit(ctx.intlist())
+    
+    def visitIntlist(self, ctx: MT22Parser.IntlistContext):
+        if(ctx.getChildCount()==1):
+            return [IntegerLit(ctx.INT_TYPE().getText())]
+        return [IntegerLit(ctx.INT_TYPE().getText())] + self.visit(ctx.intlist())

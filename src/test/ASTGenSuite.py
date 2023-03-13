@@ -10,7 +10,7 @@ class ASTGenSuite(unittest.TestCase):
         self.assertTrue(TestAST.test(input, expect, 300))
 
     def test_full_vardecl(self):
-        input = """x, y, z: integer = 1, 2, 3;"""
+        input = """x: array [2,2] of integer = {{1},{2}};"""
         expect = """Program([
 	VarDecl(x, IntegerType, IntegerLit(1))
 	VarDecl(y, IntegerType, IntegerLit(2))

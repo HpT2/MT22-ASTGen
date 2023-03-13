@@ -63,7 +63,7 @@ func_declare		: ID COLON FUNCTION function_type LP ( param_list | ) RP (INHERIT 
 assignment			: (ID | indexop) ASSIGN expr;
 return_stmt			: RETURN ( expr | ) ;
 call_stmt			: ID LP argument RP ;
-argument			: ID COMMA argument | expr COMMA argument | ID | expr | ;
+argument			: expr COMMA argument | expr | ;
 if_stmt				: IF LP expr RP ( stmt ) ( ELSE stmt | );
 for_stmt			: FOR LP (ID | indexop ) ASSIGN expr COMMA expr COMMA expr RP stmt ;
 while_stmt			: WHILE LP expr RP stmt  ;
