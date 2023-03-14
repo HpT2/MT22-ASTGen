@@ -14,8 +14,8 @@ prog				: declaration prog | declaration ;
 
 stmtlist			: stmt stmtlist | stmt  ;
 stmt				: block_stmt | var_declare
-					| ( assignment | return_stmt | call_stmt | do_while_stmt | BREAK | CONTINUE ) SEMI 
-					| if_stmt | for_stmt | while_stmt;
+					| ( assignment | return_stmt | do_while_stmt | BREAK | CONTINUE ) SEMI 
+					| if_stmt | for_stmt | while_stmt | call_stmt;
 
 declaration			: var_declare | func_declare ;
 
@@ -27,13 +27,14 @@ expr4				: expr4 (MULOP | DIVOP | MODULO) expr5 | expr5 ;
 expr5				: LOGICNOT expr5 | expr6 ;
 expr6 				: '-'expr6 | expr7 ;
 expr7 				: indexop | exprval;
-exprval				: ID | INT_TYPE | FLOAT_TYPE | STRING_TYPE | TRUE | FALSE | call_stmt | indexed_array
+exprval				: ID | INT_TYPE | FLOAT_TYPE | STRING_TYPE | TRUE | FALSE | func_call | indexed_array
 					| LP expr RP ;
 exprlist			: expr COMMA exprlist | expr ;
 
 
 indexop 			: ID LSB exprlist RSB ;
 
+func_call			: ID LP argument RP ;
 
 indexed_array 		: LCB  ( exprlist | ) RCB ;
 
@@ -62,10 +63,10 @@ func_declare		: ID COLON FUNCTION function_type LP ( param_list | ) RP (INHERIT 
 
 assignment			: (ID | indexop) ASSIGN expr;
 return_stmt			: RETURN ( expr | ) ;
-call_stmt			: ID LP argument RP ;
+call_stmt			: ID LP argument RP SEMI;
 argument			: expr COMMA argument | expr | ;
 if_stmt				: IF LP expr RP ( stmt ) ( ELSE stmt | );
-for_stmt			: FOR LP (ID | indexop ) ASSIGN expr COMMA expr COMMA expr RP stmt ;
+for_stmt			: FOR LP assignment COMMA expr COMMA expr RP stmt ;
 while_stmt			: WHILE LP expr RP stmt  ;
 do_while_stmt		: DO block_stmt WHILE LP expr RP;
 block_stmt			: LCB (stmtlist |) RCB ;

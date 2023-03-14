@@ -89,6 +89,11 @@ class MT22Visitor(ParseTreeVisitor):
         return self.visitChildren(ctx)
 
 
+    # Visit a parse tree produced by MT22Parser#func_call.
+    def visitFunc_call(self, ctx:MT22Parser.Func_callContext):
+        return self.visitChildren(ctx)
+
+
     # Visit a parse tree produced by MT22Parser#indexed_array.
     def visitIndexed_array(self, ctx:MT22Parser.Indexed_arrayContext):
         return self.visitChildren(ctx)

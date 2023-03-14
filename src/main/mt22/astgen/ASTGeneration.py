@@ -15,19 +15,13 @@ class ASTGeneration(MT22Visitor):
 
     def visitDeclaration(self, ctx: MT22Parser.DeclarationContext):
         child = ctx.getChild(0)
-        if(isinstance(child,MT22Parser.Var_declareContext)):
-            return self.visit(child)
-        return ['func declare']
+        return self.visit(child)
     
     def visitVar_declare(self, ctx: MT22Parser.Var_declareContext):
-        child0 = ctx.getChild(0)
-        vardecl_list = []
-        varlist = child0.getText().split(',')
-        if(isinstance(child0,MT22Parser.Id_listContext)):
+        if(ctx.id_list()):
+            varlist = ctx.id_list().getText().split(',')
             type_ = self.visit(ctx.getChild(2))
-            for var in varlist:
-                vardecl_list.append(VarDecl(var,type_))
-            return vardecl_list
+            return [VarDecl(var,type_) for var in varlist]
         varlst = [ctx.ID().getText()]
         exprlst = []
         recur = self.visit(ctx.recur())
@@ -130,7 +124,7 @@ class ASTGeneration(MT22Visitor):
         if(ctx.getChildCount()==3):
             return self.visit(ctx.expr())
         child = ctx.getChild(0)
-        if(not(isinstance(child,MT22Parser.Call_stmtContext)) and not(isinstance(child,MT22Parser.Indexed_arrayContext))):
+        if(not(isinstance(child,MT22Parser.Func_callContext)) and not(isinstance(child,MT22Parser.Indexed_arrayContext))):
            type_ =  child.getSymbol().type
            if (type_ == MT22Parser.INT_TYPE):
                return IntegerLit(child.getText())
@@ -141,6 +135,7 @@ class ASTGeneration(MT22Visitor):
            if (type_ == MT22Parser.ID):
                return Id(child.getText())
            return BooleanLit(child.getText())
+        print(child.getText())
         return self.visit(child)
     
     def visitIndexop(self,ctx: MT22Parser.IndexopContext):
@@ -148,8 +143,12 @@ class ASTGeneration(MT22Visitor):
         exprlist = self.visit(ctx.exprlist())
         return ArrayCell(ID,exprlist)
     
+    def visitFunc_call(self, ctx: MT22Parser.Func_callContext):
+        ID = ctx.ID().getText()
+        args = self.visit(ctx.argument())
+        return FuncCall(ID,args)
+
     def visitExprlist(self,ctx: MT22Parser.ExprlistContext):
-        print(ctx.getText())
         if(ctx.getChildCount()==1):
             return [self.visit(ctx.expr())]
         return [self.visit(ctx.expr())] + self.visit(ctx.exprlist())
@@ -163,7 +162,6 @@ class ASTGeneration(MT22Visitor):
         if(ctx.getChildCount()==0):
             return []
         expr = self.visit(ctx.expr())
-        print(ctx.getChildCount())
         if(ctx.getChildCount()==1):
             return [expr]
         return [expr] + self.visit(ctx.argument())
@@ -186,3 +184,92 @@ class ASTGeneration(MT22Visitor):
         if(ctx.getChildCount()==1):
             return [IntegerLit(ctx.INT_TYPE().getText())]
         return [IntegerLit(ctx.INT_TYPE().getText())] + self.visit(ctx.intlist())
+    
+    def visitFunc_declare(self, ctx: MT22Parser.Func_declareContext):
+        ID = ctx.ID(0).getText()
+        function_type = self.visit(ctx.function_type())
+        inheritID = None
+        param_list = []
+        if(ctx.INHERIT()):
+            inheritID = ctx.ID(1).getText()
+        block_stmt = self.visit(ctx.block_stmt())
+        if(ctx.param_list()):
+            param_list = self.visitParam_list(ctx.param_list())
+        return [FuncDecl(ID,function_type,param_list,inheritID,block_stmt)]
+    
+    def visitParam_list(self,ctx: MT22Parser.Param_listContext):
+        if (ctx.getChildCount()==1):
+            return [self.visit(ctx.param())]
+        return [self.visit(ctx.param())] + self.visit(ctx.param_list())
+    
+    def visitParam(self, ctx: MT22Parser.ParamContext):
+        inherit = True if (ctx.INHERIT()) else False
+        out = True if (ctx.OUT()) else False
+        ID = ctx.ID().getText()
+        type_ = self.visit(ctx.type_())
+        return ParamDecl(ID,type_,out,inherit)
+    
+    def visitFunction_type(self,ctx:MT22Parser.Function_typeContext):
+        return VoidType() if ctx.VOID() else self.visit(ctx.getChild(0))
+    
+    def visitBlock_stmt(self, ctx: MT22Parser.Block_stmtContext):
+        return BlockStmt(self.visit(ctx.stmtlist()) if(ctx.stmtlist()) else [])
+    
+    def visitStmtlist(self,ctx: MT22Parser.StmtlistContext):
+        if(ctx.getChildCount()==1):
+            return [self.visit(ctx.stmt())]
+        return [self.visit(ctx.stmt())] + self.visit(ctx.stmtlist())
+    
+    def visitStmt(self,ctx: MT22Parser.StmtContext):
+        child = ctx.getChild(0)
+        if(child.getText()=="break"):
+            return BreakStmt()
+        if(child.getText()=="continue"):
+            return ContinueStmt()
+        if(isinstance(child,MT22Parser.Var_declareContext)):
+            return self.visit(ctx.getChild(0))[0]
+        return self.visit(ctx.getChild(0))
+    
+    def visitAssignment(self,ctx:MT22Parser.AssignmentContext):
+        if(ctx.ID()):
+            ID = Id(ctx.ID().getText())
+        else:
+            ID = self.visit(ctx.indexop())
+        expr = self.visit(ctx.expr())
+        return AssignStmt(ID,expr)
+    
+    def visitReturn_stmt(self,ctx: MT22Parser.Return_stmtContext):
+        if(ctx.expr()):
+            expr = self.visit(ctx.expr())
+            return ReturnStmt(expr)
+        return ReturnStmt()
+    
+    def visitDo_while_stmt(self,ctx: MT22Parser.Do_while_stmtContext):
+        block_stmt = self.visit(ctx.block_stmt())
+        cond = self.visit(ctx.expr())
+        return DoWhileStmt(cond,block_stmt)
+    
+    def visitIf_stmt(self,ctx: MT22Parser.If_stmtContext):
+        cond = self.visit(ctx.expr())
+        tstmt = self.visit(ctx.stmt(0))
+        if(ctx.stmt(1)):
+            fstmt = self.visit(ctx.stmt(1))
+            return IfStmt(cond,tstmt,fstmt)
+        return IfStmt(cond,tstmt)
+    
+    def visitFor_stmt(self,ctx: MT22Parser.For_stmtContext):
+        assigment = self.visit(ctx.assignment())
+        cond = self.visit(ctx.expr(0))
+        upd = self.visit(ctx.expr(1))
+        stmt = self.visit(ctx.stmt())
+        return ForStmt(assigment,cond,upd,stmt)
+    
+    def visitWhile_stmt(self,ctx: MT22Parser.While_stmtContext):
+        cond = self.visit(ctx.expr())
+        stmt = self.visit(ctx.stmt())
+        return WhileStmt(cond,stmt)
+    
+
+
+    
+    
