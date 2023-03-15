@@ -1,7 +1,7 @@
 from MT22Visitor import MT22Visitor
 from MT22Parser import MT22Parser
 from AST import *
-
+from functools import reduce
 
 class ASTGeneration(MT22Visitor):
     def visitProgram(self, ctx: MT22Parser.ProgramContext):
@@ -21,6 +21,7 @@ class ASTGeneration(MT22Visitor):
         if(ctx.id_list()):
             varlist = ctx.id_list().getText().split(',')
             type_ = self.visit(ctx.getChild(2))
+            vardecls = [VarDecl(var,type_) for var in varlist]
             return [VarDecl(var,type_) for var in varlist]
         varlst = [ctx.ID().getText()]
         exprlst = []
@@ -135,7 +136,6 @@ class ASTGeneration(MT22Visitor):
            if (type_ == MT22Parser.ID):
                return Id(child.getText())
            return BooleanLit(child.getText())
-        print(child.getText())
         return self.visit(child)
     
     def visitIndexop(self,ctx: MT22Parser.IndexopContext):
@@ -213,12 +213,16 @@ class ASTGeneration(MT22Visitor):
         return VoidType() if ctx.VOID() else self.visit(ctx.getChild(0))
     
     def visitBlock_stmt(self, ctx: MT22Parser.Block_stmtContext):
-        return BlockStmt(self.visit(ctx.stmtlist()) if(ctx.stmtlist()) else [])
+        stmtlist = self.visit(ctx.stmtlist()) if(ctx.stmtlist()) else []
+        return BlockStmt(stmtlist)
     
     def visitStmtlist(self,ctx: MT22Parser.StmtlistContext):
+        stmt = self.visit(ctx.stmt())
+        if(not(isinstance(stmt,list))):
+            stmt = [stmt]
         if(ctx.getChildCount()==1):
-            return [self.visit(ctx.stmt())]
-        return [self.visit(ctx.stmt())] + self.visit(ctx.stmtlist())
+            return stmt
+        return stmt + self.visit(ctx.stmtlist())
     
     def visitStmt(self,ctx: MT22Parser.StmtContext):
         child = ctx.getChild(0)
@@ -227,7 +231,8 @@ class ASTGeneration(MT22Visitor):
         if(child.getText()=="continue"):
             return ContinueStmt()
         if(isinstance(child,MT22Parser.Var_declareContext)):
-            return self.visit(ctx.getChild(0))[0]
+            varlist = self.visit(ctx.getChild(0))
+            return [var for var in varlist]
         return self.visit(ctx.getChild(0))
     
     def visitAssignment(self,ctx:MT22Parser.AssignmentContext):

@@ -1,3 +1,2 @@
-main: function string (out a:integer) inherit aa {
-
-        }
+x, y, z: integer = 1, 2, 3;
+        a, b: float;
