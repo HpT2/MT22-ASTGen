@@ -228,6 +228,175 @@ class ASTGenSuite(unittest.TestCase):
 ])"""
 		self.assertTrue(TestAST.test(input, expect, 320))
 
+	def test21(self):
+		input = """
+            I_Luv_U: function string(life: integer){
+                while(life != end){
+                    print("I" + "Will" + "Keep" + "Loving" + "You");
+                    life = life + 1;
+                }
+                return I_Luv_U(life-life);
+            }  
+        """
+		expect = """Program([
+	FuncDecl(I_Luv_U, StringType, [Param(life, IntegerType)], None, BlockStmt([WhileStmt(BinExpr(!=, Id(life), Id(end)), BlockStmt([CallStmt(print, BinExpr(+, BinExpr(+, BinExpr(+, BinExpr(+, StringLit(I), StringLit(Will)), StringLit(Keep)), StringLit(Loving)), StringLit(You))), AssignStmt(Id(life), BinExpr(+, Id(life), IntegerLit(1)))])), ReturnStmt(FuncCall(I_Luv_U, [BinExpr(-, Id(life), Id(life))]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 321))
+
+	def test22(self):
+		input = """
+            Travelling_path: function string(start: string,end:string){
+                while(start!=end){
+                    path = path + start;
+                    start = nextDest(start);
+                }
+                return path;
+            }   
+        """
+		expect = """Program([
+	FuncDecl(Travelling_path, StringType, [Param(start, StringType), Param(end, StringType)], None, BlockStmt([WhileStmt(BinExpr(!=, Id(start), Id(end)), BlockStmt([AssignStmt(Id(path), BinExpr(+, Id(path), Id(start))), AssignStmt(Id(start), FuncCall(nextDest, [Id(start)]))])), ReturnStmt(Id(path))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 322))
+
+	def test23(self):
+		input = """
+                        x:integer = {1,2,3==foo()+(4>6)} ;    
+        """
+		expect = """Program([
+	VarDecl(x, IntegerType, ArrayLit([IntegerLit(1), IntegerLit(2), BinExpr(==, IntegerLit(3), BinExpr(+, FuncCall(foo, []), BinExpr(>, IntegerLit(4), IntegerLit(6))))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 323))
+
+	def test24(self):
+		input = """a: array [2] of integer = {}; """
+		expect = """Program([
+	VarDecl(a, ArrayType([2], IntegerType), ArrayLit([]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 324))
+
+	def test25(self):
+		input = """
+            isEqual: function boolean (_1:string, _2:string){
+                return _1==_2;
+            }
+        """
+		expect = """Program([
+	FuncDecl(isEqual, BooleanType, [Param(_1, StringType), Param(_2, StringType)], None, BlockStmt([ReturnStmt(BinExpr(==, Id(_1), Id(_2)))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 325))
+
+	def test26(self):
+		input = """_x_:string = {{\n}}; """
+		expect = """Program([
+	VarDecl(_x_, StringType, ArrayLit([ArrayLit([])]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 326))
+
+	def test27(self):
+		input = """
+            /* This 
+            is 
+            a 
+            comment */
+            concat:function string(string1:string, string2:string){
+                return string1::string2;
+            }
+        """
+		expect = """Program([
+	FuncDecl(concat, StringType, [Param(string1, StringType), Param(string2, StringType)], None, BlockStmt([ReturnStmt(BinExpr(::, Id(string1), Id(string2)))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 327))
+
+	def test28(self):
+		input = """
+            concat:function string(string1:string,string2:string,string3:string){
+                return {(string1::(string2::string3))};
+            }
+        """
+		expect = """Program([
+	FuncDecl(concat, StringType, [Param(string1, StringType), Param(string2, StringType), Param(string3, StringType)], None, BlockStmt([ReturnStmt(ArrayLit([BinExpr(::, Id(string1), BinExpr(::, Id(string2), Id(string3)))]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 328))
+
+	def test29(self):
+		input = """
+            main:function void (){
+                a = a+b::c+d;
+            }  
+        """
+		expect = """Program([
+	FuncDecl(main, VoidType, [], None, BlockStmt([AssignStmt(Id(a), BinExpr(::, BinExpr(+, Id(a), Id(b)), BinExpr(+, Id(c), Id(d))))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 329))
+
+	def test30(self):
+		input = """
+            arr:function integer () {
+                return {{},{},{}};
+            } 
+        """
+		expect = """Program([
+	FuncDecl(arr, IntegerType, [], None, BlockStmt([ReturnStmt(ArrayLit([ArrayLit([]), ArrayLit([]), ArrayLit([])]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 330))
+
+	def test31(self):
+		input = """
+                a:auto = true||false::"a";
+        """
+		expect = """Program([
+	VarDecl(a, AutoType, BinExpr(::, BinExpr(||, BooleanLit(True), BooleanLit(False)), StringLit(a)))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 331))
+
+	def test32(self):
+		input = """a:string = {"}"}; """
+		expect = """Program([
+	VarDecl(a, StringType, ArrayLit([StringLit(})]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 332))
+
+	def test33(self):
+		input = """
+            program: function string(){
+                for (i = foo(goo(hoo({1,2,3}))), (x+2)==(z>=a[4]), a[{1}] + 1)
+                {
+                
+                }
+            }  
+        """
+		expect = """Program([
+	FuncDecl(program, StringType, [], None, BlockStmt([ForStmt(AssignStmt(Id(i), FuncCall(foo, [FuncCall(goo, [FuncCall(hoo, [ArrayLit([IntegerLit(1), IntegerLit(2), IntegerLit(3)])])])])), BinExpr(==, BinExpr(+, Id(x), IntegerLit(2)), BinExpr(>=, Id(z), ArrayCell(a, [IntegerLit(4)]))), BinExpr(+, ArrayCell(a, [ArrayLit([IntegerLit(1)])]), IntegerLit(1)), BlockStmt([]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 333))
+
+
+	def test34(self):
+		input = """
+            func:function void() {
+                a[1::2] = 1;
+                return;
+            }  
+        """
+		expect = """Program([
+	FuncDecl(func, VoidType, [], None, BlockStmt([AssignStmt(ArrayCell(a, [BinExpr(::, IntegerLit(1), IntegerLit(2))]), IntegerLit(1)), ReturnStmt()]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 334))
+
+
+	def test35(self):
+		input = """
+            hpt: string = "dep trai\\n";
+        """
+		expect = """Program([
+	VarDecl(hpt, StringType, StringLit(dep trai\\n))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 335))
+
+
+
+
+
 
 
 	

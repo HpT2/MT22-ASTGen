@@ -1,0 +1,3 @@
+Program([
+	VarDecl(hpt, StringType, StringLit(dep trai\n))
+])

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(isEqual, BooleanType, [Param(_1, StringType), Param(_2, StringType)], None, BlockStmt([ReturnStmt(BinExpr(==, Id(_1), Id(_2)))]))
+])

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(concat, StringType, [Param(string1, StringType), Param(string2, StringType), Param(string3, StringType)], None, BlockStmt([ReturnStmt(ArrayLit([BinExpr(::, Id(string1), BinExpr(::, Id(string2), Id(string3)))]))]))
+])

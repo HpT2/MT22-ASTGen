@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(I_Luv_U, StringType, [Param(life, IntegerType)], None, BlockStmt([WhileStmt(BinExpr(!=, Id(life), Id(end)), BlockStmt([CallStmt(print, BinExpr(+, BinExpr(+, BinExpr(+, BinExpr(+, StringLit(I), StringLit(Will)), StringLit(Keep)), StringLit(Loving)), StringLit(You))), AssignStmt(Id(life), BinExpr(+, Id(life), IntegerLit(1)))])), ReturnStmt(FuncCall(I_Luv_U, [BinExpr(-, Id(life), Id(life))]))]))
+])

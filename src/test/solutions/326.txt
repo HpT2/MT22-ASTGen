@@ -1,0 +1,3 @@
+Program([
+	VarDecl(_x_, StringType, ArrayLit([ArrayLit([])]))
+])

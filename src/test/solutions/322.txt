@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(Travelling_path, StringType, [Param(start, StringType), Param(end, StringType)], None, BlockStmt([WhileStmt(BinExpr(!=, Id(start), Id(end)), BlockStmt([AssignStmt(Id(path), BinExpr(+, Id(path), Id(start))), AssignStmt(Id(start), FuncCall(nextDest, [Id(start)]))])), ReturnStmt(Id(path))]))
+])
