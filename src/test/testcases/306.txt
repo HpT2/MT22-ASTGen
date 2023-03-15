@@ -1,5 +1,1 @@
-
-program: function void () {
-
-            a = {1,2,3};
-        }
+a: array [1] of integer = {1,2,3}; 

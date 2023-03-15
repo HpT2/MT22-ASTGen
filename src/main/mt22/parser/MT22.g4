@@ -12,8 +12,8 @@ program:  prog EOF ;
 
 prog				: declaration prog | declaration ;
 
-stmtlist			: stmt stmtlist | stmt  ;
-stmt				: block_stmt | var_declare
+stmtlist			: stmt stmtlist | var_declare stmtlist | stmt | var_declare ;
+stmt				: block_stmt
 					| ( assignment | return_stmt | do_while_stmt | BREAK | CONTINUE ) SEMI 
 					| if_stmt | for_stmt | while_stmt | call_stmt;
 

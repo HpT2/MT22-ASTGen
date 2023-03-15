@@ -135,7 +135,7 @@ class ASTGeneration(MT22Visitor):
                return StringLit(child.getText())
            if (type_ == MT22Parser.ID):
                return Id(child.getText())
-           return BooleanLit(child.getText())
+           return BooleanLit(True) if child.getText()=='true' else BooleanLit(False)
         return self.visit(child)
     
     def visitIndexop(self,ctx: MT22Parser.IndexopContext):
@@ -178,7 +178,8 @@ class ASTGeneration(MT22Visitor):
         return ArrayType(dimension,type_)
     
     def visitDimension(self, ctx: MT22Parser.DimensionContext):
-        return self.visit(ctx.intlist())
+        intlist = ctx.intlist().getText().split(',')
+        return intlist
     
     def visitIntlist(self, ctx: MT22Parser.IntlistContext):
         if(ctx.getChildCount()==1):
@@ -217,7 +218,7 @@ class ASTGeneration(MT22Visitor):
         return BlockStmt(stmtlist)
     
     def visitStmtlist(self,ctx: MT22Parser.StmtlistContext):
-        stmt = self.visit(ctx.stmt())
+        stmt = self.visit(ctx.getChild(0))
         if(not(isinstance(stmt,list))):
             stmt = [stmt]
         if(ctx.getChildCount()==1):

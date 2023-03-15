@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(main, VoidType, [], None, BlockStmt([WhileStmt(BooleanLit(True), DoWhileStmt(IntegerLit(1), BlockStmt([AssignStmt(ArrayCell(a, [UnExpr(-, StringLit(a))]), BinExpr(>, Id(b), Id(d)))])))]))
+])

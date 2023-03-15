@@ -1,3 +1,5 @@
 Program([
-	VarDecl(x, IntegerType)
+	VarDecl(a, StringType)
+	VarDecl(b, StringType)
+	VarDecl(c, StringType)
 ])

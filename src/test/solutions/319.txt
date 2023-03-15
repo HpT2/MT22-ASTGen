@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(max, IntegerType, [Param(x, IntegerType), Param(y, IntegerType)], None, BlockStmt([IfStmt(BinExpr(>, Id(x), Id(y)), ReturnStmt(Id(x)), ReturnStmt(Id(y)))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([VarDecl(m, IntegerType, FuncCall(max, [IntegerLit(9), UnExpr(!, UnExpr(-, IntegerLit(1)))])), CallStmt(print, Id(m))]))
+])

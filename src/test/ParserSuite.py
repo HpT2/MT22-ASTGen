@@ -59,8 +59,8 @@ class ParserSuite(unittest.TestCase):
 
     def test9(self):
         input = """
-            fact: function integer(a,b: array){
-                
+            fact: function integer(){
+                if(true) {a: integer;}
             }
         """
         expect = "Error on line 2 col 36: ,"
@@ -97,12 +97,9 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test(input, expect, 212))
 
     def test13(self):
-        input = """
-            main: function void (){
+        input = """main: function void (){
                 x: integer = 1;
-                x = x + -foo(b,c,d,e);
-                if(x) return 1;
-                else return 3;
+                x= -foo(b,c,d,e);
             }
         """
         expect = "successful"

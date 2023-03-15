@@ -1,1 +1,1 @@
-x: integer;
+ a,b,c : string; 
