@@ -128,9 +128,9 @@ class ASTGeneration(MT22Visitor):
         if(not(isinstance(child,MT22Parser.Func_callContext)) and not(isinstance(child,MT22Parser.Indexed_arrayContext))):
            type_ =  child.getSymbol().type
            if (type_ == MT22Parser.INT_TYPE):
-               return IntegerLit(child.getText())
+               return IntegerLit(int(child.getText()))
            if (type_ == MT22Parser.FLOAT_TYPE):
-               return FloatLit(child.getText())
+               return FloatLit(float(child.getText()))
            if (type_ == MT22Parser.STRING_TYPE):
                return StringLit(child.getText())
            if (type_ == MT22Parser.ID):

@@ -1,0 +1,4 @@
+Program([
+	VarDecl(bool1, BooleanType, ArrayCell(a, [BooleanLit(True)]))
+	VarDecl(bool2, BooleanType, ArrayCell(b, [BooleanLit(False)]))
+])

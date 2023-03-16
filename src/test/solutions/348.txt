@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(eat, VoidType, [Param(animal, StringType)], None, BlockStmt([IfStmt(BinExpr(==, Id(animal), StringLit(dog)), AssignStmt(Id(food), Id(meat)), IfStmt(BinExpr(==, Id(animal), StringLit(cat)), AssignStmt(Id(food), Id(fish)), AssignStmt(Id(food), Id(worm))))]))
+])

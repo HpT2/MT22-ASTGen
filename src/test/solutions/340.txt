@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(main, FloatType, [], None, BlockStmt([CallStmt(foo, FloatLit(1e-10))]))
+])

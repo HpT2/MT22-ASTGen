@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(quadratic_eqation_solver, FloatType, [Param(a, FloatType), Param(b, FloatType), Param(c, FloatType)], None, BlockStmt([AssignStmt(Id(delta), BinExpr(-, BinExpr(*, Id(b), Id(b)), BinExpr(*, BinExpr(*, IntegerLit(4), Id(a)), Id(c)))), AssignStmt(Id(x1), BinExpr(/, BinExpr(-, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), AssignStmt(Id(x2), BinExpr(/, BinExpr(+, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), ReturnStmt(ArrayLit([Id(x1), Id(x2)]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(print, FuncCall(quadratic_equation_solver, [IntegerLit(1), IntegerLit(2), IntegerLit(1)]))]))
+])

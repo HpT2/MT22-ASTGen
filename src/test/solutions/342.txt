@@ -1,0 +1,3 @@
+Program([
+	VarDecl(_1, StringType, BinExpr(::, BinExpr(::, StringLit(asd), IntegerLit(123)), BinExpr(::, ArrayCell(a, [IntegerLit(4)]), FuncCall(foo, [BinExpr(::, Id(bc), ArrayLit([IntegerLit(123), IntegerLit(321)]))]))))
+])

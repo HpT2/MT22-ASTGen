@@ -393,6 +393,192 @@ class ASTGenSuite(unittest.TestCase):
 ])"""
 		self.assertTrue(TestAST.test(input, expect, 335))
 
+	def test36(self):
+		input = """
+            a:float = .00001e5;
+        """
+		expect = """Program([
+	VarDecl(a, FloatType, FloatLit(1.0))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 336))
+
+	def test37(self):
+		input = """
+            a:float = 12.34e-56;
+        """
+		expect = """Program([
+	VarDecl(a, FloatType, FloatLit(1.234e-55))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 337))
+
+	def test38(self):
+		input = """
+            /* @#$%^^&************(())*/
+            factorial: function float (n:float){
+                if (n==1) return 1;
+                return n * factorial(n-1);
+
+            }
+        """
+		expect = """Program([
+	FuncDecl(factorial, FloatType, [Param(n, FloatType)], None, BlockStmt([IfStmt(BinExpr(==, Id(n), IntegerLit(1)), ReturnStmt(IntegerLit(1))), ReturnStmt(BinExpr(*, Id(n), FuncCall(factorial, [BinExpr(-, Id(n), IntegerLit(1))])))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 338))
+
+	def test39(self):
+		input = """
+            floaT: function float (){
+                return 1.;
+            }
+        """
+		expect = """Program([
+	FuncDecl(floaT, FloatType, [], None, BlockStmt([ReturnStmt(FloatLit(1.0))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 339))
+
+	def test40(self):
+		input = """
+            main:function float (){
+                foo(1.E-10);
+            }
+        """
+		expect = """Program([
+	FuncDecl(main, FloatType, [], None, BlockStmt([CallStmt(foo, FloatLit(1e-10))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 340))
+
+	def test41(self):
+		input = """
+            _1:string = ("asd"::123)::foo(bc::{123,321});
+        """
+		expect = """Program([
+	VarDecl(_1, StringType, BinExpr(::, BinExpr(::, StringLit(asd), IntegerLit(123)), FuncCall(foo, [BinExpr(::, Id(bc), ArrayLit([IntegerLit(123), IntegerLit(321)]))])))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 341))
+
+	def test42(self):
+		input = """
+             _1:string = ("asd"::123)::(a[4]::foo(bc::{123,321}));
+        """
+		expect = """Program([
+	VarDecl(_1, StringType, BinExpr(::, BinExpr(::, StringLit(asd), IntegerLit(123)), BinExpr(::, ArrayCell(a, [IntegerLit(4)]), FuncCall(foo, [BinExpr(::, Id(bc), ArrayLit([IntegerLit(123), IntegerLit(321)]))]))))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 342))
+
+	def test43(self):
+		input = """
+            HpTIsmE: function integer (out x:string){
+                a_b_c_=1_2_3_4_5.E-9;
+            }
+        """
+		expect = """Program([
+	FuncDecl(HpTIsmE, IntegerType, [OutParam(x, StringType)], None, BlockStmt([AssignStmt(Id(a_b_c_), FloatLit(1.2345e-05))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 343))
+
+	def test44(self):
+		input = """
+            x: float = 1_2_3.e-10 + ---2_3_4.E20;
+        """
+		expect = """Program([
+	VarDecl(x, FloatType, BinExpr(+, FloatLit(1.23e-08), UnExpr(-, UnExpr(-, UnExpr(-, FloatLit(2.34e+22))))))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 344))
+
+	def test45(self):
+		input = """
+            quadratic_eqation_solver: function float(a:float,b:float,c:float){
+                delta = b*b - 4*a*c;
+                x1 = (-b - sqrt(delta))/(2*a) ;
+                x2 = (-b + sqrt(delta))/(2*a) ;
+                return {x1,x2};
+            }
+            main:function void (){
+                print(quadratic_equation_solver(1,2,1));
+            }
+        """
+		expect = """Program([
+	FuncDecl(quadratic_eqation_solver, FloatType, [Param(a, FloatType), Param(b, FloatType), Param(c, FloatType)], None, BlockStmt([AssignStmt(Id(delta), BinExpr(-, BinExpr(*, Id(b), Id(b)), BinExpr(*, BinExpr(*, IntegerLit(4), Id(a)), Id(c)))), AssignStmt(Id(x1), BinExpr(/, BinExpr(-, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), AssignStmt(Id(x2), BinExpr(/, BinExpr(+, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), ReturnStmt(ArrayLit([Id(x1), Id(x2)]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(print, FuncCall(quadratic_equation_solver, [IntegerLit(1), IntegerLit(2), IntegerLit(1)]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 345))
+
+	def test46(self):
+		input = """
+            quadratic_eqation_solver: function float(a:float,b:float,c:float){
+                delta = b*b - 4*a*c;
+                x1 = (-b - sqrt(delta))/(2*a) ;
+                x2 = (-b + sqrt(delta))/(2*a) ;
+                return {x1,x2};
+            }
+            quartic_equation_solver: function float(a:float,b:float,c:float){
+                res: array [2] of float = quadratic_equation_solver(a,b,c);
+                x1,x2,x3,x4:float = -squrt(res[0]),sqrt(res[o]),-sqrt(res[1]),sqrt(res[1]);
+                return {x1,x2,x3,x4};
+            }
+            main:function void (){
+                print(quartic_equation_solver(1,2,1));
+            }
+        """
+		expect = """Program([
+	FuncDecl(quadratic_eqation_solver, FloatType, [Param(a, FloatType), Param(b, FloatType), Param(c, FloatType)], None, BlockStmt([AssignStmt(Id(delta), BinExpr(-, BinExpr(*, Id(b), Id(b)), BinExpr(*, BinExpr(*, IntegerLit(4), Id(a)), Id(c)))), AssignStmt(Id(x1), BinExpr(/, BinExpr(-, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), AssignStmt(Id(x2), BinExpr(/, BinExpr(+, UnExpr(-, Id(b)), FuncCall(sqrt, [Id(delta)])), BinExpr(*, IntegerLit(2), Id(a)))), ReturnStmt(ArrayLit([Id(x1), Id(x2)]))]))
+	FuncDecl(quartic_equation_solver, FloatType, [Param(a, FloatType), Param(b, FloatType), Param(c, FloatType)], None, BlockStmt([VarDecl(res, ArrayType([2], FloatType), FuncCall(quadratic_equation_solver, [Id(a), Id(b), Id(c)])), VarDecl(x1, FloatType, UnExpr(-, FuncCall(squrt, [ArrayCell(res, [IntegerLit(0)])]))), VarDecl(x2, FloatType, FuncCall(sqrt, [ArrayCell(res, [Id(o)])])), VarDecl(x3, FloatType, UnExpr(-, FuncCall(sqrt, [ArrayCell(res, [IntegerLit(1)])]))), VarDecl(x4, FloatType, FuncCall(sqrt, [ArrayCell(res, [IntegerLit(1)])])), ReturnStmt(ArrayLit([Id(x1), Id(x2), Id(x3), Id(x4)]))]))
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(print, FuncCall(quartic_equation_solver, [IntegerLit(1), IntegerLit(2), IntegerLit(1)]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 346))
+
+	def test47(self):
+		input = """
+            //Hello world in MT22 language
+            main: function void(){
+                printStr("Hello world");
+            }
+        """
+		expect = """Program([
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(printStr, StringLit(Hello world))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 347))
+
+	def test48(self):
+		input = """
+            eat: function void(animal: string){
+                if (animal=="dog") food = meat;
+                else if (animal == "cat") food = fish;
+                else food = worm;
+            }
+        """
+		expect = """Program([
+	FuncDecl(eat, VoidType, [Param(animal, StringType)], None, BlockStmt([IfStmt(BinExpr(==, Id(animal), StringLit(dog)), AssignStmt(Id(food), Id(meat)), IfStmt(BinExpr(==, Id(animal), StringLit(cat)), AssignStmt(Id(food), Id(fish)), AssignStmt(Id(food), Id(worm))))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 348))
+
+	def test49(self):
+		input = """
+            eat: function void(animal: string){
+                if (animal=="dog") {food = meat;}
+                else {if (animal == "cat") {food = fish;}
+                else {food = worm;}}
+            }
+        """
+		expect = """Program([
+	FuncDecl(eat, VoidType, [Param(animal, StringType)], None, BlockStmt([IfStmt(BinExpr(==, Id(animal), StringLit(dog)), BlockStmt([AssignStmt(Id(food), Id(meat))]), BlockStmt([IfStmt(BinExpr(==, Id(animal), StringLit(cat)), BlockStmt([AssignStmt(Id(food), Id(fish))]), BlockStmt([AssignStmt(Id(food), Id(worm))]))]))]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 349))
+
+	def test50(self):
+		input = """
+            bool1,bool2:boolean = a[true],b[false];
+        """
+		expect = """Program([
+	VarDecl(bool1, BooleanType, ArrayCell(a, [BooleanLit(True)]))
+	VarDecl(bool2, BooleanType, ArrayCell(b, [BooleanLit(False)]))
+])"""
+		self.assertTrue(TestAST.test(input, expect, 350))
+
+
+
+	
+
 
 
 
