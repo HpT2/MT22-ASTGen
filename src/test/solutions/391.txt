@@ -1,0 +1,6 @@
+Program([
+	VarDecl(a, StringType, ArrayCell(a, [IntegerLit(1)]))
+	VarDecl(b, StringType, BinExpr(+, Id(b), Id(d)))
+	VarDecl(c, StringType, ArrayLit([IntegerLit(123), IntegerLit(4)]))
+	VarDecl(d, StringType, FuncCall(foo, [FuncCall(goo, [FuncCall(hoo, [])])]))
+])

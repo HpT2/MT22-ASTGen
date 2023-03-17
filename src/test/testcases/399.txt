@@ -1,3 +1,6 @@
 
-            main : function void (inherit out x : array[3] of string) {}
+            a,_ : auto = _,_;
+            main:function void (){
+                
+            }
         

@@ -1,3 +1,5 @@
-x,y:string;
-                    a,b,c:float=1,2,4.e5;
-                    d: array[1,2] of integer;
+
+		main:function boolean(inherit out x: integer) inherit abc {
+			
+		}
+		

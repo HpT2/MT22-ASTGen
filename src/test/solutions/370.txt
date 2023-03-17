@@ -1,0 +1,4 @@
+Program([
+	VarDecl(input, AutoType)
+	FuncDecl(i, VoidType, [], None, BlockStmt([AssignStmt(ArrayCell(input, [IntegerLit(1)]), Id(input)), CallStmt(goo, )]))
+])

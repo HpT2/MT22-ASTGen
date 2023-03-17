@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(null, VoidType, [InheritOutParam(null, IntegerType)], null, BlockStmt([ReturnStmt(BinExpr(+, Id(null), Id(none)))]))
+])

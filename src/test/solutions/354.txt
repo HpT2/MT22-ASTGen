@@ -1,0 +1,4 @@
+Program([
+	VarDecl(x, FloatType, UnExpr(-, FloatLit(1.0)))
+	VarDecl(y, BooleanType, BinExpr(&&, Id(a), BinExpr(||, BooleanLit(True), BooleanLit(False))))
+])

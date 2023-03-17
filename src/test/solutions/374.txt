@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(def, IntegerType, [], None, BlockStmt([ReturnStmt(FuncCall(def, [BinExpr(&&, Id(_x), Id(_y))]))]))
+])

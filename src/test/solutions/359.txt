@@ -1,0 +1,5 @@
+Program([
+	VarDecl(a, ArrayType([2, 3], StringType), ArrayLit([StringLit(1), StringLit(2)]))
+	VarDecl(a, ArrayType([2, 3], BooleanType), ArrayLit([ArrayLit([]), ArrayLit([])]))
+	VarDecl(a, ArrayType([2, 3], IntegerType), ArrayLit([FuncCall(goo, [])]))
+])

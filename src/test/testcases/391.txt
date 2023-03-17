@@ -1,11 +1,3 @@
- 
-                func1 : function array [5] of integer(){
-                    do{
-                        x,y:integer;
-                        x=3;
-                    }
-                    while(x<10);
-                    while(x<10){x:integer;}
-                    x:float;
-                }
-                
+
+		a,b,c,d : string = a[1],b+d,{123,4},foo(goo(hoo()));
+		

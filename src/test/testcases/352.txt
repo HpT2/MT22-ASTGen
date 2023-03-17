@@ -1,1 +1,12 @@
- a,b :auto; 
+
+            main:function void(){
+                foo(
+                    3,
+                    4,
+                    -goo(),
+                    a[t],
+                    .E2
+                )
+                ;
+            }
+        

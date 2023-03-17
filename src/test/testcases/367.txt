@@ -1,1 +1,5 @@
- a: float=a>(b>c)::d==e;
+
+		sum:function integer(a:integer, b:integer) {
+			return a + b + 1_22222222_3e2;
+		}
+		

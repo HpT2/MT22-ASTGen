@@ -1,1 +1,5 @@
-a,b : integer = {1,2,3},1_2;
+
+            True:function boolean(x:integer){
+                return true-false == a || b;
+            }  
+        

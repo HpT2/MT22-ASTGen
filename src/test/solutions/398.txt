@@ -1,0 +1,3 @@
+Program([
+	VarDecl(a, IntegerType, ArrayLit([ArrayLit([ArrayLit([ArrayLit([ArrayLit([ArrayLit([ArrayLit([ArrayLit([])])])])])])]), Id(s)]))
+])

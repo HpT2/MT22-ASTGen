@@ -1,5 +1,6 @@
 
-                func1 : function integer(a : array [5] of integer){
-                    return 1;
-                }
-                
+        sub: function integer(){{{{
+            do {x = x + 1;}
+            while(true);
+        }}}}  
+        

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(i, VoidType, [], None, BlockStmt([CallStmt(foo, ), CallStmt(goo, ), CallStmt(hoo, )]))
+])

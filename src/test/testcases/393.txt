@@ -1,5 +1,9 @@
 
-                func1 : function integer(a : array [5] of integer){
-                    return 1;
+		main: function void () {
+                x = foo(-{1,2,3});
+                while (true) {
+                    do {}
+                    while(false);
                 }
-                
+            }
+		

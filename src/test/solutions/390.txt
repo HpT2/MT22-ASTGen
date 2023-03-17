@@ -1,0 +1,4 @@
+Program([
+	FuncDecl(func1, VoidType, [], None, BlockStmt([]))
+	FuncDecl(func2, VoidType, [], func1, BlockStmt([CallStmt(func1, ), ReturnStmt(FuncCall(func1, []))]))
+])

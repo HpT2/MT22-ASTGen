@@ -1,3 +1,5 @@
- a,b : auto = {1,2,3},2;
-        _c,_d_:integer=1,2;
-        _foo: function integer(inherit out _foo:array[3] of integer,out x:auto){}
+
+		a:array [2,3] of string = {"1","2"}; 
+		a:array [2,3] of boolean = {{},{}};
+		a:array [2,3] of integer = {goo()};  
+		

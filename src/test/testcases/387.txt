@@ -1,15 +1,8 @@
-  main : function void () {
-                } 
-                main : function array [3] of boolean () {
-                }
-                main : function integer () {
-                }
-                main : function float () {
-                }
-                main : function string () {
-                }
-                main : function boolean () {
-                }
-                main : function auto () {
-                }
-                
+
+		 stage: function auto () {
+			if(!isDead()){
+				stage = stage + 1;
+			}
+			return false;
+		 }
+		

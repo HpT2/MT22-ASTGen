@@ -1,0 +1,5 @@
+Program([
+	VarDecl(h, AutoType)
+	VarDecl(g, AutoType)
+	FuncDecl(main, VoidType, [InheritParam(h, IntegerType), OutParam(g, StringType)], None, BlockStmt([AssignStmt(Id(h), Id(g))]))
+])

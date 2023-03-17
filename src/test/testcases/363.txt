@@ -1,5 +1,5 @@
-  inc : function void (out n : integer , delta : integer)
-        {
-            _:integer = _ + _ - _ / _;
-            _[1,2,3]=_[1,2,3];
-            } 
+
+			test:function auto () {
+				a = a-b+c*d/e;
+			}
+		

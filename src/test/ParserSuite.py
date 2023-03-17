@@ -67,7 +67,7 @@ class ParserSuite(unittest.TestCase):
         self.assertTrue(TestParser.test(input, expect, 209))
 
     def test10(self):
-        input = input = """
+        nput = """
             main: function void () {
                 x = foo(-{1,2,3});
                 while (true) {

@@ -1,3 +1,7 @@
- main : function void () {
-                    a = {{{}}, {{}}, {{},{}}};
-                }  
+
+		func1:function void () {}
+		func2:function void () inherit func1 {
+			func1();
+			return func1();
+		}
+		

@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(fact, IntegerType, [], None, BlockStmt([IfStmt(BooleanLit(True), BlockStmt([VarDecl(a, IntegerType), VarDecl(b, IntegerType), VarDecl(c, IntegerType), VarDecl(d, IntegerType)]))]))
+])

@@ -1,3 +1,5 @@
- main : function void(){
-                    foo(2 + x, 4.0 / y,z[0],foo({1,2,3}));
-                    } 
+
+			b:function void () inherit a{
+				{{{{{{{}}}}}}}
+			}
+		

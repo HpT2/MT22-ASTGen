@@ -1,3 +1,5 @@
 
-            _The_end__ : integer = 1_0.0;
+		 func: function array [2,2] of integer (){
+                return {{1},{2},{3}};
+            }  
         

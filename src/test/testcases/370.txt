@@ -1,1 +1,7 @@
- gram : function integer(out a : integer) inherit func{} 
+
+		 input: auto;
+		 i:  function void () {
+			input[1] = input;
+			goo();
+		 }
+		

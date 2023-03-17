@@ -130,7 +130,7 @@ class ASTGeneration(MT22Visitor):
            if (type_ == MT22Parser.INT_TYPE):
                return IntegerLit(int(child.getText()))
            if (type_ == MT22Parser.FLOAT_TYPE):
-               return FloatLit(float(child.getText()))
+               return FloatLit(float('0'+child.getText()))
            if (type_ == MT22Parser.STRING_TYPE):
                return StringLit(child.getText())
            if (type_ == MT22Parser.ID):

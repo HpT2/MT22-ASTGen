@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(main, VoidType, [], None, BlockStmt([CallStmt(foo, IntegerLit(3), IntegerLit(4), UnExpr(-, FuncCall(goo, [])), ArrayCell(a, [Id(t)]), FloatLit(0.0))]))
+])

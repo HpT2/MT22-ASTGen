@@ -1,0 +1,3 @@
+Program([
+	FuncDecl(b, VoidType, [], a, BlockStmt([BlockStmt([BlockStmt([BlockStmt([BlockStmt([BlockStmt([BlockStmt([BlockStmt([])])])])])])])]))
+])
